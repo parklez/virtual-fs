@@ -1,4 +1,5 @@
 /*
+* Alunos:
 * Murilo Ceotto Azzi
 * Giovani Menuzzo
 * Rodrigo
@@ -53,6 +54,7 @@ int main(){
     pai[0] = 0;
     strcpy(nome[0], "/");
 
+
     system("cls");
     main_menu();
 
@@ -64,8 +66,21 @@ void pwd(){
 }
 
 void mkdir(dirname){
-}
+    int exists = 0;
 
+    for (int i = 0; i < MAX_ENTRIES; i++){
+        if (pai[i] == posicao_atual){
+            if (strcmp(dirname, nome[i]) != 0){
+                strcpy(nome[i], dirname);
+                printf("mkdir: '%s' created!\n");
+                codigo_do_diretorio += 1;
+            }
+            else{
+                puts("mkdir: directory with same name already exists!");
+            }
+        }
+    }
+}
 
 int main_menu(){
     while (running == 1){
@@ -83,7 +98,7 @@ int main_menu(){
             pwd();
         }
         else if (strcmp(command, "mkdir") == 0){
-            puts("mkdir...");
+            mkdir(param1);
         }
         else if (strcmp(command, "cd") == 0){
             puts("cd...");
