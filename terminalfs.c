@@ -1,39 +1,71 @@
 /*
-* Meme project I'm working on
+* Murilo Ceotto Azzi
+* Giovani Menuzzo
+* Rodrigo
+* Renan
 */
-
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_ENTRIES 1024
 #define MAX_LINE_LENGTH 80
-#define DEBUG 1
+#define MAX_NAME_LENGTH 8
+#define DEBUG 0
 
 char command_input[MAX_LINE_LENGTH];
 char *command, *param1, *param2;
+
 int pai[MAX_ENTRIES];
-char nome[MAX_ENTRIES], data[MAX_ENTRIES], hora[MAX_ENTRIES];
+char nome[MAX_ENTRIES][MAX_NAME_LENGTH];
+char data[MAX_ENTRIES][MAX_NAME_LENGTH];
+char hora[MAX_ENTRIES][MAX_NAME_LENGTH];
+
 int posicao_atual = 0, codigo_do_diretorio = 0;
 int running = 1;
 
+// These are global buffers
+char thedate[10];
+char thetime[10];
+
+void update_time(){
+    /* Returns date in dd:mm:yyyy format */
+    time_t t = time(NULL);
+    struct tm current_time = *localtime(&t);
+
+    sprintf(thetime, "%d:%d:%d", current_time.tm_hour, current_time.tm_min, current_time.tm_sec);
+    sprintf(thedate, "%d/%d/%d", current_time.tm_mday, current_time.tm_mon + 1, current_time.tm_year + 1900);
+}
 
 int main(){
 
     // Setting all vectors to -1 (does not exist)
     for (int i = 0; i < 1024; i++){
     pai[i] = -1;
-    nome[i] = "";
-    data[i] = "";
-    hora[i] = "";
+    strcpy(nome[i], "");
+    strcpy(data[i], "");
+    strcpy(hora[i], "");
     }
 
-    system("clear");
+    // Defining the root directory
+    pai[0] = 0;
+    strcpy(nome[0], "/");
+
+    system("cls");
     main_menu();
 
     return 0;
 }
+
+void pwd(){
+    printf("Current Working Directory: '%s'\n", nome[posicao_atual]);
+}
+
+void mkdir(dirname){
+}
+
 
 int main_menu(){
     while (running == 1){
@@ -47,9 +79,8 @@ int main_menu(){
         if (DEBUG == 1){
             printf("[DEBUG] command: '%s', param1: '%s', param2: '%s'\n", command, param1, param2);
         }
-
         if (strcmp(command, "pwd") == 0){
-            puts("pwd...");
+            pwd();
         }
         else if (strcmp(command, "mkdir") == 0){
             puts("mkdir...");
@@ -74,14 +105,13 @@ int main_menu(){
             puts("copyright...");
         }
         else if (strcmp(command, "clear") == 0){
-            puts("clear...");
-            system("clear");
+            system("cls");
         }
         else if (strcmp(command, "help") == 0){
             puts("help...");
         }
         else{
-            puts("Unknown command '%s'");
+            printf("Unknown command '%s'\n", command);
         }
     }
 }
