@@ -44,8 +44,18 @@ void update_time(){
 }
 
 void pwd(){
-    // TODO: /dir1/dir1.1/dir1.1.1
-    printf("Current Working Directory: '%s'\n", nome[current_position]);
+    char path[MAX_LINE_LENGTH];
+    strcat(path, "/");
+
+    int cp = current_position;
+    
+    // dolbaeb?!
+    while (cp > 0){
+        strcat(path, nome[cp]);
+        strcat(path, "/");
+        cp = pai[cp];
+    }
+    printf("Current path: '%s'\n", path);
 }
 
 void mkdir(char *dirname){
@@ -125,6 +135,48 @@ void ls(char *arg){
     }
 }
 
+void cd(char *arg){
+    // Warns user in case no arguments are given
+    if (arg == NULL){
+        puts("cd: 'cd <dirname>' to enter a directory or 'cd ..' to go back to parent.");
+        return;
+    }
+
+    // Parent ..
+    if (strcmp(arg, "..") == 0){
+        if (current_position == 0){
+            puts("cd: '/'");
+        }
+        else {
+            current_position = pai[current_position];
+        }
+        return;
+    }
+
+    // tolower() dirname to avoid upper/lower case conflicts
+    for(int i = 0; i < strlen(arg); i++){
+        arg[i] = tolower(arg[i]);
+    }
+    
+    // Look for all entries within current_position, if that exists, change current_position to i
+    int exists = 0;
+    for (int i = 0; i < MAX_ENTRIES; i++){
+        if (pai[i] == current_position){
+            if (strcmp(nome[i], arg) == 0){
+                exists = 1;
+                current_position = i;
+                break;
+            }
+        }
+    }
+
+    // In case such entry does not exist... warn user.
+    if (exists == 0){
+        printf("cd: directory '%s' not found in current position '%s'.\n", arg, nome[current_position]);
+    }
+    return;
+}
+
 void debug(){
     for (int i = 0; i < 20; i++){
         printf("parent[%i]: %i | name[%i]: '%s' | date[%i]: %s | time[%i]: %s\n", i, pai[i], i, nome[i], i, data[i], i, hora[i]);
@@ -152,7 +204,7 @@ int main_menu(){
             mkdir(param1);
         }
         else if (strcmp(command, "cd") == 0){
-            puts("cd...");
+            cd(param1);
         }
         else if (strcmp(command, "rmdir") == 0){
             puts("rmdir");
