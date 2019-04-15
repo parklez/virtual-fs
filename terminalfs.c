@@ -48,7 +48,7 @@ void pwd(){
     printf("Current Working Directory: '%s'\n", nome[current_position]);
 }
 
-void mkdir(dirname){
+void mkdir(char *dirname){
     /* Checks if dirname exists in current directory,
     if not, creates an entry. */
 
@@ -102,7 +102,7 @@ void mkdir(dirname){
     }
 }
 
-void ls(arg){
+void ls(char *arg){
     /* Prints directories at current_position */
 
     // Checks if arg is NULL or -l, in case not, warns user.
@@ -171,7 +171,7 @@ int main_menu(){
             puts("copyright...");
         }
         else if (strcmp(command, "clear") == 0){
-            system("cls");
+            system("clear");
         }
         else if (strcmp(command, "help") == 0){
             puts("help...");
@@ -202,7 +202,7 @@ int main(){
     strcpy(hora[0], thetime);
     
 
-    system("cls");
+    system("clear");
     main_menu();
 
     return 0;
