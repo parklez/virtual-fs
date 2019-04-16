@@ -50,39 +50,48 @@ void pwd(){
     int cp = current_position;
     
     // dolbaeb?!
+    // maybe store parent codes in an array for the forwards process(?)
+    int smart[1024];
+    
+    for (int i = 0; i < MAX_ENTRIES; i++){
+        smart[i] = -1;
+    }
+    
     while (cp > 0){
         strcat(path, nome[cp]);
         strcat(path, "/");
         cp = pai[cp];
     }
+    
     printf("Current path: '%s'\n", path);
 }
 
 void mkdir(char *dirname){
     /* Checks if dirname exists in current directory,
     if not, creates an entry. */
-
+    
+    // Warns user in case no arguments are given
+    if (dirname == NULL){
+        puts("mkdir: <dirname> to create a directory in current position.");
+        return;
+    }
+    
     // Checks if dirname is no longer than 8 characters.
     if (strlen(dirname) > 8){
         puts("mkdir: names only up to 8 characters allowed!");
         return;
     }
 
-    // Creating a copy of dirname (which is a pointer) into a char variable.
-    // For some reason I can only iterate like this, as well as use some string.h functions.
-    char tempdir[8];
-    strcpy(tempdir, dirname);
-
     // Checks if dirname consists of only alphabetic characters.
-    for (int i = 0; i < strlen(tempdir); i++){
-        if (isalpha(tempdir[i]) == 0){
+    for (int i = 0; i < strlen(dirname); i++){
+        if (isalpha(dirname[i]) == 0){
             puts("mkdir: names must consist of only alphabetic characters!");
             return;
         }
     }
     // tolower() dirname to avoid upper/lower case conflicts
-    for(int i = 0; i < strlen(tempdir); i++){
-        tempdir[i] = tolower(tempdir[i]);
+    for(int i = 0; i < strlen(dirname); i++){
+        dirname[i] = tolower(dirname[i]);
     }
 
     // Checks whether or not dirname exists in current directory
@@ -90,7 +99,7 @@ void mkdir(char *dirname){
 
     for (int i = 0; i < MAX_ENTRIES; i++){
         if (pai[i] == current_position){
-            if (strcmp(tempdir, nome[i]) == 0){
+            if (strcmp(dirname, nome[i]) == 0){
                 puts("mkdir: directory with same name already exists!");
                 exists = 1;
                 return;
@@ -104,12 +113,117 @@ void mkdir(char *dirname){
         update_time();
         
         pai[directory_code] = current_position;
-        strcpy(nome[directory_code], tempdir);
+        strcpy(nome[directory_code], dirname);
         strcpy(data[directory_code], thedate);
         strcpy(hora[directory_code], thetime);
         
-        printf("mkdir: '%s' created!\n", tempdir);
+        printf("mkdir: '%s' created!\n", dirname);
     }
+}
+
+void rmdir(char *dirname){
+    /* Attempts to remove an entry, making sure such entry does not countain any children */
+    
+    // Warns user in case no arguments are given
+    if (dirname == NULL){
+        puts("rmdir: <dirname> to erase a directory in current position.");
+        return;
+    }
+    
+    int exists = 0;
+    
+    // Checks if dirname exists in current_position
+    int i;
+
+    for (i = 1; i < MAX_ENTRIES; i++){
+        if (pai[i] == current_position){
+            if (strcmp(nome[i], dirname) == 0){
+                exists = 1;
+                break;
+            }
+        }
+    }
+    
+    // Warns user in case dirname doesn't exist
+    if (exists == 0){
+        printf("rmdir: can not erase '%s', does not exist!\n", dirname);
+        return;
+    }
+    
+    // Checks if dirname has any children, then warns user
+    for (int k = 1; k < MAX_ENTRIES; k++){
+        if (pai[k] == i){
+            printf("rmdir: can not erase '%s', directory has children!\n", dirname);
+            return;
+        }
+    }
+    
+    // In case there's no children, time to erase it!
+    if (exists == 1){
+        pai[i] = -1;
+        strcpy(nome[i], "");
+        strcpy(data[i], "");
+        strcpy(hora[i], "");
+    }
+    return;
+}
+    
+void rem(char *dirname, char *newname){
+    /* Attempts to rename a directory in current_position */
+    
+    // Warns user in case no arguments are given
+    if (dirname == NULL || newname == NULL){
+        puts("rem: <dirname> <newname>.");
+        return;
+    }
+
+    // Checks if newname is no longer than 8 characters
+    if (strlen(newname) > 8){
+        puts("rem: <newname> must not be longer than 8 characters!");
+        return;
+    }
+
+    // Checks if newname consists of only characters
+    for (int i = 0; i < strlen(newname); i++){
+        if (isalpha(newname[i]) == 0){
+            puts("rem: <newname> must consist of only alphabetic characters!");
+            return;
+        }
+    }
+
+    // tolower() newname to avoid upper/lower case conflicts
+    for(int i = 0; i < strlen(newname); i++){
+        newname[i] = tolower(newname[i]);
+    }
+    
+    int exists = 0;
+    int where;
+    
+    // Checks if dirname exists (and where) as well if newname doesn't in current_position
+    for (int i = 0; i < MAX_ENTRIES; i++){
+        if (pai[i] == current_position){
+            if (strcmp(nome[i], dirname) == 0){
+                exists = 1;
+                where = i;
+            }
+            if (strcmp(nome[i], newname) == 0){
+                printf("rem: directory '%s' already exists in current directory!\n", newname);
+                return;
+            }
+        }
+    }
+    
+    // In case dirname doesn't exist
+    if (exists == 0){
+        printf("rem: directory '%s' does not exist.\n", dirname);
+        return;
+    }
+    
+    // Time to replace nome[where] with newname
+    if (exists == 1){
+        strcpy(nome[where], newname);
+    }
+    return;
 }
 
 void ls(char *arg){
@@ -136,6 +250,8 @@ void ls(char *arg){
 }
 
 void cd(char *arg){
+    /* Attempts to change current_position */
+    
     // Warns user in case no arguments are given
     if (arg == NULL){
         puts("cd: 'cd <dirname>' to enter a directory or 'cd ..' to go back to parent.");
@@ -207,23 +323,23 @@ int main_menu(){
             cd(param1);
         }
         else if (strcmp(command, "rmdir") == 0){
-            puts("rmdir");
+            rmdir(param1);
         }
         else if (strcmp(command, "ls") == 0){
             ls(param1);
         }
         else if (strcmp(command, "rem") == 0){
-            puts("rem...");
+            rem(param1, param2);
         }
         else if (strcmp(command, "poweroff") == 0){
-            puts("poweroff...");
+            puts("goodbye...");
             return 0;
         }
         else if (strcmp(command, "copyright") == 0){
             puts("copyright...");
         }
         else if (strcmp(command, "clear") == 0){
-            system("clear");
+            system("cls");
         }
         else if (strcmp(command, "help") == 0){
             puts("help...");
@@ -254,7 +370,7 @@ int main(){
     strcpy(hora[0], thetime);
     
 
-    system("clear");
+    system("cls");
     main_menu();
 
     return 0;
