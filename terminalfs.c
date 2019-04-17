@@ -116,9 +116,12 @@ void mkdir(char *dirname){
         strcpy(nome[directory_code], dirname);
         strcpy(data[directory_code], thedate);
         strcpy(hora[directory_code], thetime);
-        
+    }
+
+    if (DEBUG == 1){
         printf("mkdir: '%s' created!\n", dirname);
     }
+    return;
 }
 
 void rmdir(char *dirname){
@@ -169,7 +172,8 @@ void rmdir(char *dirname){
 }
     
 void rem(char *dirname, char *newname){
-    /* Attempts to rename a directory in current_position */
+    /* Attempts to rename a directory in current_position
+    rmdir() and mkdir() could be used to shorten this code... maybe.*/
     
     // Warns user in case no arguments are given
     if (dirname == NULL || newname == NULL){
@@ -294,9 +298,31 @@ void cd(char *arg){
 }
 
 void debug(){
+    /* Prints a bunch of stuff */
+
+    printf("current_position: %i | directory_code: %i\n", current_position, directory_code);
+
     for (int i = 0; i < 20; i++){
         printf("parent[%i]: %i | name[%i]: '%s' | date[%i]: %s | time[%i]: %s\n", i, pai[i], i, nome[i], i, data[i], i, hora[i]);
     }
+}
+
+void help(){
+    /* prints all the commands we've created */
+    
+    puts("'cd' - changes directory.");
+    puts("'clear' - wipes the prompt.");
+    puts("'copyright' - shows the author of this code.");
+    puts("'help' - shows all available commands and their short descriptions.");
+    puts("'ls' - lists directories within current working directory. 'ls -l' to see when created.");
+    puts("'mkdir' - creates a new directory.");
+    puts("'poweroff' - shuts down this terminal.");
+    puts("'help' - prints working directory.");
+    puts("'rem' - renames a directory.");
+    puts("'rmdir' - erases a directory.");
+    puts("'debug' - shows the first 20 entries of the file system.");
+
+    return;
 }
 
 int main_menu(){
@@ -336,13 +362,13 @@ int main_menu(){
             return 0;
         }
         else if (strcmp(command, "copyright") == 0){
-            puts("copyright...");
+            puts("(c) 2019 github.com/parklez");
         }
         else if (strcmp(command, "clear") == 0){
-            system("cls");
+            system("clear");
         }
         else if (strcmp(command, "help") == 0){
-            puts("help...");
+            help();
         }
         else if (strcmp(command, "debug") == 0){
             debug();
@@ -370,7 +396,7 @@ int main(){
     strcpy(hora[0], thetime);
     
 
-    system("cls");
+    system("clear");
     main_menu();
 
     return 0;
