@@ -53,7 +53,8 @@ void pwd(){
     // maybe store parent codes in an array for the forwards process(?)
     int smart[1024];
     
-    for (int i = 0; i < MAX_ENTRIES; i++){
+	int i;
+    for (i = 0; i < MAX_ENTRIES; i++){
         smart[i] = -1;
     }
     
@@ -83,21 +84,22 @@ void mkdir(char *dirname){
     }
 
     // Checks if dirname consists of only alphabetic characters.
-    for (int i = 0; i < strlen(dirname); i++){
+	int i;
+    for (i = 0; i < strlen(dirname); i++){
         if (isalpha(dirname[i]) == 0){
             puts("mkdir: names must consist of only alphabetic characters!");
             return;
         }
     }
     // tolower() dirname to avoid upper/lower case conflicts
-    for(int i = 0; i < strlen(dirname); i++){
+    for(i = 0; i < strlen(dirname); i++){
         dirname[i] = tolower(dirname[i]);
     }
 
     // Checks whether or not dirname exists in current directory
     int exists = 0;
 
-    for (int i = 0; i < MAX_ENTRIES; i++){
+    for (i = 0; i < MAX_ENTRIES; i++){
         if (pai[i] == current_position){
             if (strcmp(dirname, nome[i]) == 0){
                 puts("mkdir: directory with same name already exists!");
@@ -154,7 +156,8 @@ void rmdir(char *dirname){
     }
     
     // Checks if dirname has any children, then warns user
-    for (int k = 1; k < MAX_ENTRIES; k++){
+	int k;
+    for (k = 1; k < MAX_ENTRIES; k++){
         if (pai[k] == i){
             printf("rmdir: can not erase '%s', directory has children!\n", dirname);
             return;
@@ -188,7 +191,8 @@ void rem(char *dirname, char *newname){
     }
 
     // Checks if newname consists of only characters
-    for (int i = 0; i < strlen(newname); i++){
+	int i;
+    for (i = 0; i < strlen(newname); i++){
         if (isalpha(newname[i]) == 0){
             puts("rem: <newname> must consist of only alphabetic characters!");
             return;
@@ -196,7 +200,7 @@ void rem(char *dirname, char *newname){
     }
 
     // tolower() newname to avoid upper/lower case conflicts
-    for(int i = 0; i < strlen(newname); i++){
+    for(i = 0; i < strlen(newname); i++){
         newname[i] = tolower(newname[i]);
     }
     
@@ -204,7 +208,7 @@ void rem(char *dirname, char *newname){
     int where;
     
     // Checks if dirname exists (and where) as well if newname doesn't in current_position
-    for (int i = 0; i < MAX_ENTRIES; i++){
+    for (i = 0; i < MAX_ENTRIES; i++){
         if (pai[i] == current_position){
             if (strcmp(nome[i], dirname) == 0){
                 exists = 1;
@@ -240,8 +244,9 @@ void ls(char *arg){
     }
 
     printf("ls: entries at '%s'\n", nome[current_position]);
-
-    for (int i = 1; i < MAX_ENTRIES; i++){
+	
+	int i;
+    for (i = 1; i < MAX_ENTRIES; i++){
         if (pai[i] == current_position){
             if (arg == NULL){
                 printf("-> '%s'\n", nome[i]);
@@ -274,13 +279,14 @@ void cd(char *arg){
     }
 
     // tolower() dirname to avoid upper/lower case conflicts
-    for(int i = 0; i < strlen(arg); i++){
+	int i;
+    for(i = 0; i < strlen(arg); i++){
         arg[i] = tolower(arg[i]);
     }
     
     // Look for all entries within current_position, if that exists, change current_position to i
     int exists = 0;
-    for (int i = 0; i < MAX_ENTRIES; i++){
+    for (i = 0; i < MAX_ENTRIES; i++){
         if (pai[i] == current_position){
             if (strcmp(nome[i], arg) == 0){
                 exists = 1;
@@ -301,8 +307,8 @@ void debug(){
     /* Prints a bunch of stuff */
 
     printf("current_position: %i | directory_code: %i\n", current_position, directory_code);
-
-    for (int i = 0; i < 20; i++){
+	int i;
+    for (i = 0; i < 20; i++){
         printf("parent[%i]: %i | name[%i]: '%s' | date[%i]: %s | time[%i]: %s\n", i, pai[i], i, nome[i], i, data[i], i, hora[i]);
     }
 }
@@ -381,7 +387,8 @@ int main_menu(){
 
 int main(){
     // Setting all vectors to -1 (does not exist)
-    for (int i = 0; i < 1024; i++){
+	int i;
+    for (i = 0; i < 1024; i++){
         pai[i] = -1;
         strcpy(nome[i], "");
         strcpy(data[i], "");
