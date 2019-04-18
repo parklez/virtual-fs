@@ -1,4 +1,4 @@
-0/*
+/*
 * C
 * Linux
 * Can not create directories with the same name in current position
