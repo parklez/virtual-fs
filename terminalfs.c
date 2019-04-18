@@ -1,4 +1,4 @@
-/*
+0/*
 * C
 * Linux
 * Can not create directories with the same name in current position
@@ -328,7 +328,6 @@ void help(){
     puts("'ls' - lists directories within current working directory. 'ls -l' to see when created.");
     puts("'mkdir' - creates a new directory.");
     puts("'poweroff' - shuts down this terminal.");
-    puts("'help' - prints working directory.");
     puts("'rem' - renames a directory.");
     puts("'rmdir' - erases a directory.");
     puts("'debug' - shows the first 20 entries of the file system.");
