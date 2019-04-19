@@ -41,13 +41,15 @@ void update_time(){
 
     sprintf(thetime, "%d:%d:%d", current_time.tm_hour, current_time.tm_min, current_time.tm_sec);
     sprintf(thedate, "%d/%d/%d", current_time.tm_mday, current_time.tm_mon + 1, current_time.tm_year + 1900);
+    
+    return;
 }
 
 void pwd(){
     /* Questionable code to print current path */
     
     int cp = current_position;
-    int back[1024];
+    int back[MAX_ENTRIES];
     int i = 0;
     
     // In case current_position is 0
@@ -128,6 +130,7 @@ void mkdir(char *dirname){
     if (DEBUG == 1){
         printf("mkdir: '%s' created!\n", dirname);
     }
+    
     return;
 }
 
@@ -176,6 +179,7 @@ void rmdir(char *dirname){
         strcpy(data[i], "");
         strcpy(hora[i], "");
     }
+    
     return;
 }
     
@@ -236,6 +240,7 @@ void rem(char *dirname, char *newname){
     if (exists == 1){
         strcpy(nome[where], newname);
     }
+    
     return;
 }
 
@@ -261,6 +266,8 @@ void ls(char *arg){
             }
         }
     }
+    
+    return;
 }
 
 void cd(char *arg){
@@ -305,6 +312,7 @@ void cd(char *arg){
     if (exists == 0){
         printf("cd: directory '%s' not found in current position '%s'.\n", arg, nome[current_position]);
     }
+    
     return;
 }
 
@@ -316,6 +324,8 @@ void debug(){
     for (i = 0; i < 20; i++){
         printf("parent[%i]: %i | name[%i]: '%s' | date[%i]: %s | time[%i]: %s\n", i, pai[i], i, nome[i], i, data[i], i, hora[i]);
     }
+    
+    return;
 }
 
 void help(){
@@ -350,7 +360,7 @@ int main_menu(){
             printf("[DEBUG] command: '%s', param1: '%s', param2: '%s'\n", command, param1, param2);
         }
         if (command == NULL){
-            puts("");
+            printf("");
         }
         else if (strcmp(command, "pwd") == 0){
             pwd();
@@ -395,7 +405,7 @@ int main_menu(){
 int main(){
     // Setting all vectors to -1 (does not exist)
     int i;
-    for (i = 0; i < 1024; i++){
+    for (i = 0; i < MAX_ENTRIES; i++){
         pai[i] = -1;
         strcpy(nome[i], "");
         strcpy(data[i], "");
