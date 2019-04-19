@@ -41,8 +41,6 @@ void update_time(){
 
     sprintf(thetime, "%d:%d:%d", current_time.tm_hour, current_time.tm_min, current_time.tm_sec);
     sprintf(thedate, "%d/%d/%d", current_time.tm_mday, current_time.tm_mon + 1, current_time.tm_year + 1900);
-    
-    return;
 }
 
 void pwd(){
@@ -70,8 +68,6 @@ void pwd(){
         printf("/%s", nome[back[i]]);
     }
     puts("");
-    
-    return;
 }
 
 void mkdir(char *dirname){
@@ -130,8 +126,6 @@ void mkdir(char *dirname){
     if (DEBUG == 1){
         printf("mkdir: '%s' created!\n", dirname);
     }
-    
-    return;
 }
 
 void rmdir(char *dirname){
@@ -179,8 +173,6 @@ void rmdir(char *dirname){
         strcpy(data[i], "");
         strcpy(hora[i], "");
     }
-    
-    return;
 }
     
 void rem(char *dirname, char *newname){
@@ -240,8 +232,6 @@ void rem(char *dirname, char *newname){
     if (exists == 1){
         strcpy(nome[where], newname);
     }
-    
-    return;
 }
 
 void ls(char *arg){
@@ -266,8 +256,6 @@ void ls(char *arg){
             }
         }
     }
-    
-    return;
 }
 
 void cd(char *arg){
@@ -312,8 +300,6 @@ void cd(char *arg){
     if (exists == 0){
         printf("cd: directory '%s' not found in current position '%s'.\n", arg, nome[current_position]);
     }
-    
-    return;
 }
 
 void debug(){
@@ -324,8 +310,6 @@ void debug(){
     for (i = 0; i < 20; i++){
         printf("parent[%i]: %i | name[%i]: '%s' | date[%i]: %s | time[%i]: %s\n", i, pai[i], i, nome[i], i, data[i], i, hora[i]);
     }
-    
-    return;
 }
 
 void help(){
@@ -341,8 +325,6 @@ void help(){
     puts("'rem' - renames a directory.");
     puts("'rmdir' - erases a directory.");
     puts("'debug' - shows the first 20 entries of the file system.");
-
-    return;
 }
 
 int main_menu(){
